@@ -39,6 +39,9 @@
       let appleX = 5;
       let appleY = 5;
 
+      let enemyX = 15;
+      let enemyY = 15;
+
       // input
       let inputsXVelocity = 0;
       let inputsYVelocity = 0;
@@ -61,6 +64,7 @@
       yVelocity = inputsYVelocity;
 
       changeSnakePosition();
+      checkEnemyCollision();
 
       // check GameOver
       isGameOver();
@@ -70,6 +74,7 @@
 
       // make everything on the canvas black
       clearScreen();
+      drawEnemy();
 
       checkAppleCollision();
 
@@ -85,6 +90,12 @@
     function changeSnakePosition() {
       headX = headX + xVelocity;
       headY = headY + yVelocity;
+    }
+
+    function checkEnemyCollision() {
+      if (enemyX === headX && enemyY === headY) {
+        gameOver = true;
+      }
     }
 
     function isGameOver() {
@@ -135,10 +146,21 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height); // 0,0 = upper left corner of the canvas; canvas.width and canvas.height will fill the canvas
     }
 
+    function drawEnemy() {
+      ctx.fillStyle = "blue";
+      ctx.fillRect(enemyX * tileCount, enemyY * tileCount, tileSize-1, tileSize-1); // appleX * tileCount, appleY * tileCount = x and y coordinate of the canvas
+    }
+
     function checkAppleCollision() {
-      if (appleX === headX && appleY == headY) { // randomly change apple location
+      if (appleX === headX && appleY === headY) { // randomly change apple location
         appleX = Math.floor(Math.random() * tileCount);
         appleY = Math.floor(Math.random() * tileCount);
+
+        while ((appleX === enemyX) && (appleY === enemyY)) { // check if the apple is where the enemy is
+          appleX = Math.floor(Math.random() * tileCount);
+          appleY = Math.floor(Math.random() * tileCount);
+        }
+
         tailLength++; 
         score++;
         gulpSound.play();
@@ -146,8 +168,10 @@
     }
 
     function drawApple() {
+      ctx.beginPath(); // reset the current path
       ctx.fillStyle = "red";
-      ctx.fillRect(appleX * tileCount, appleY * tileCount, tileSize, tileSize); // appleX * tileCount, appleY * tileCount = x and y coordinate of the canvas
+      ctx.arc((appleX * tileCount) + 9, (appleY * tileCount) + 9, 10, 0, 2 * Math.PI); // (appleX * tileCount) + 9, (appleY * tileCount) + 9 = x and y coordinate of the canvas; 10 = size; and 0, 2 * Math.PI = radius of the circle
+      ctx.fill(); // fills the current drawing (path)
     }
 
     function drawSnake() {
@@ -235,10 +259,18 @@
       headX = 10;
       headY = 10;
       tailLength = 2;
-      snakeParts.splice(0,snakeParts.length)
+      snakeParts.splice(0,snakeParts.length);
 
       appleX = 5;
       appleY = 5;
+
+      enemyX = Math.floor(Math.random() * tileCount);
+      enemyY = Math.floor(Math.random() * tileCount);
+
+      while (enemyX === headX && enemyY === headY) { // check if the enemy is where the snake head is
+        enemyX = Math.floor(Math.random() * tileCount);
+        enemyY = Math.floor(Math.random() * tileCount);
+      }
 
       inputsXVelocity = 0;
       inputsYVelocity = 0;
