@@ -55,6 +55,8 @@
       let gameOver = false;
       let isInMenuScreen = true;
 
+      let isInputSleep = false;
+
       const gulpSound = new Audio("sound.mp3");
 
     /* game loop and game functions */
@@ -85,6 +87,7 @@
 
       increaseSnakeSpeed();
 
+      isInputSleep = false;
       setTimeout(drawGame, 1000 / speed); // overall game speed (fps)
     }
 
@@ -236,37 +239,10 @@
         
       function keyDown(event) {
 
+        // game start
         if (event.key == "Enter" && isInMenuScreen == true) {
           isInMenuScreen = false;
           drawGame();
-        }
-
-        // up
-        if (event.key == "ArrowUp" || event.key == "w") {
-          if (inputsYVelocity == 1) return;
-          inputsYVelocity = -1;
-          inputsXVelocity = 0;
-        }
-
-        // down
-        if (event.key == "ArrowDown" || event.key == "s") {
-          if (inputsYVelocity == -1) return;
-          inputsYVelocity = 1;
-          inputsXVelocity = 0;
-        }
-
-        // left
-        if (event.key == "ArrowLeft" || event.key == "a") {
-          if (inputsXVelocity == 1) return;
-          inputsYVelocity = 0;
-          inputsXVelocity = -1;
-        }
-
-        // right
-        if (event.key == "ArrowRight" || event.key == "d") {
-          if (inputsXVelocity == -1) return;
-          inputsYVelocity = 0;
-          inputsXVelocity = 1;
         }
 
         // reset the game after the game over screen display
@@ -275,6 +251,45 @@
 
           /* game loop and game functions */
           drawGame();
+        }
+
+        // movement keys
+        if (isInputSleep === false) {
+          // up
+          if (event.key == "ArrowUp" || event.key == "w") {
+            if (inputsYVelocity == 1) return;
+            inputsYVelocity = -1;
+            inputsXVelocity = 0;
+
+            isInputSleep = true;
+          }
+
+          // down
+          if (event.key == "ArrowDown" || event.key == "s") {
+            if (inputsYVelocity == -1) return;
+            inputsYVelocity = 1;
+            inputsXVelocity = 0;
+
+            isInputSleep = true;
+          }
+
+          // left
+          if (event.key == "ArrowLeft" || event.key == "a") {
+            if (inputsXVelocity == 1) return;
+            inputsYVelocity = 0;
+            inputsXVelocity = -1;
+
+            isInputSleep = true;
+          }
+
+          // right
+          if (event.key == "ArrowRight" || event.key == "d") {
+            if (inputsXVelocity == -1) return;
+            inputsYVelocity = 0;
+            inputsXVelocity = 1;
+
+            isInputSleep = true;
+          }
         }
       }
 
