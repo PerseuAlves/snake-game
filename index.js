@@ -53,6 +53,7 @@
       let score = 0;
 
       let gameOver = false;
+      let isInMenuScreen = true;
 
       const gulpSound = new Audio("sound.mp3");
 
@@ -210,10 +211,35 @@
         }
     }
 
+    /* menu screen */
+      function menuScreen() {
+        ctx.fillStyle = "gray";
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // 0,0 = upper left corner of the canvas; canvas.width and canvas.height will fill the canvas
+
+        ctx.fillStyle = "white";
+        ctx.font = "50px Verdana";
+
+        var gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        gradient.addColorStop("0", " magenta");
+        gradient.addColorStop("0.5", "blue");
+        gradient.addColorStop("1.0", "red");
+        ctx.fillStyle = gradient; // fill with gradient
+
+        ctx.fillText("Snake Game", canvas.width / 10, canvas.height / 2);
+
+        ctx.font = "30px Verdana";
+        ctx.fillText("Press enter to start", canvas.width / 8, canvas.height / 1.6);
+      }
+
     /* keyboard scan */
       document.body.addEventListener("keydown", keyDown);
         
       function keyDown(event) {
+
+        if (event.key == "Enter" && isInMenuScreen == true) {
+          isInMenuScreen = false;
+          drawGame();
+        }
 
         // up
         if (event.key == "ArrowUp" || event.key == "w") {
@@ -282,6 +308,6 @@
 
       gameOver = false;
     }
-            
+          
 /* load game */
-  drawGame();
+  menuScreen();
